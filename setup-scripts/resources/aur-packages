@@ -1,3 +1,4 @@
+aura-bin
 alltomp3-bin
 aurutils
 bsp-layout
@@ -25,7 +26,5 @@ ttf-symbola
 ttf-ubraille
 tty-clock
 unimatrix-git
-update-grub
 xtitle
-yay
 ytop

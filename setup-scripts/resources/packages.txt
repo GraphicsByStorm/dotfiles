@@ -3,7 +3,6 @@ xorg-xsetroot
 scrot
 nomacs
 rsync
-python3
 python-pip
 zsh
 zsh-theme-powerlevel10k
@@ -19,7 +18,6 @@ feh
 kitty
 thunar
 mpv
-exa
 neofetch
 nodejs
 npm
@@ -27,7 +25,6 @@ htop
 lxappearance
 picom
 meson
-wmutils-git
 ueberzug
 ninja
 pcre
