@@ -31,13 +31,13 @@ AUR_PKGS=(
 )
 
 # Install AUR packages
-aura -A -- --needed --noconfirm "${AUR_PKGS[@]}" || {
+aura -A --needed --noconfirm "${AUR_PKGS[@]}" || {
   echo "[ERROR]: Failed installing AUR packages."
   exit 1
 }
 
 # Extra AUR packages not in list
-aura -A -- --needed --noconfirm wmutils-git ueberzug
+aura -A --needed --noconfirm wmutils-git ueberzug
 
 # Python requirement
 pip install --break-system-packages dbus-python

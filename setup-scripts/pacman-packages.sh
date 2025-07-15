@@ -49,7 +49,7 @@ PKGS=(
 )
 
 # Install packages using aura
-aura -S -- --needed --noconfirm "${PKGS[@]}" || {
+aura -S --needed --noconfirm "${PKGS[@]}" || {
   echo "[ERROR]: Failed installing pacman packages."
   exit 1
 }
