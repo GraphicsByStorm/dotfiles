@@ -1,41 +1,30 @@
-#! /bin/bash
+#!/bin/bash
 
-echo "[START]: aur/external-packages installation..."
+echo "[START]: AUR/external packages installation..."
 
-# import keys
-./.scripts/addkey.sh `cat ./setup-scripts/resources/keys | grep -v '#'`
+# Import keys
+./.scripts/addkey.sh $(grep -v '#' ./setup-scripts/resources/keys)
 
-# output packages directory creation
-[ -d $HOME/Downloads/git-downloads ] || mkdir -p $HOME/Downloads/git-downloads
+# Output packages directory creation
+mkdir -p "$HOME/Downloads/git-downloads"
 
-#
-# AUR
-#
+# Update system
+sudo aura -Sy
 
-# yay
-# https://aur.archlinux.org/yay.git
-sudo pacman -Qi yay || ./.scripts/aur-get https://aur.archlinux.org/yay.git
-yay -Syu
+# Install AUR packages
+aura -A --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/aur-packages) || {
+  echo "[ERROR]: Failed installing AUR packages."
+  exit 1
+}
 
-yes "y" | yay -S --noconfirm --useask --norebuild --needed --batchinstall --mflags --skipinteg --overwrite "*" --nodeps `cat ./setup-scripts/resources/aur-packages` || exit 1
-yes "y" | yay -S --noconfirm --useask --norebuild --needed --batchinstall --mflags --skipinteg --overwrite "*" --nodeps wmutils-git ueberzug
+# Extra AUR packages not in list
+aura -A --needed --noconfirm wmutils-git ueberzug
 
-pip install dbus-python
+# Python requirement
+pip install --break-system-packages dbus-python
 
-# spicetify-cli
-# https://aur.archlinux.org/spicetify-cli.git
-# spicetify config current_theme $THEME_NAME
-# spicetify auto backup apply
+# Spotify fix (if using Spicetify)
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
 
-#
-# GITHUB
-#
-
-# BeautifulDiscord
-# https://github.com/leovoel/BeautifulDiscord
-#python3 -m pip install -U https://github.com/leovoel/BeautifulDiscord/archive/master.zip
-# use: python -m beautifuldiscord --css ~/.config/discord/rices/$THEME_NAME
-
-echo "[FINISHED]: aur/external-packages installation"
+echo "[FINISHED]: AUR/external packages installation"

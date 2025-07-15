@@ -1,40 +1,25 @@
-#! /bin/bash
+#!/bin/bash
 
-echo "[START]: packages installation..."
+echo "[START]: Combined packages installation..."
 
-# import keys
-./.scripts/addkey.sh `cat ./setup-scripts/resources/keys | grep -v '#'`
+# Import keys
+./.scripts/addkey.sh $(grep -v '#' ./setup-scripts/resources/keys)
 
-# output packages directory creation
-[ -d $HOME/Downloads/git-downloads ] || mkdir -p $HOME/Downloads/git-downloads
+# Output packages directory creation
+mkdir -p "$HOME/Downloads/git-downloads"
 
-#
-# AUR
-#
+# Update
+sudo aura -Syu --noconfirm
 
-# yay
-# https://aur.archlinux.org/yay.git
-sudo pacman -Qi yay || ./.scripts/aur-get https://aur.archlinux.org/yay.git
-yay -Syu
+# Manual split between official and AUR required here (not ideal)
+# This assumes you fixed packages.txt to contain only AUR-compatible items
+aura -A --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/packages.txt)
 
-yay -S `cat ./setup-scripts/resources/packages.txt`
+# Python requirement
+pip install --break-system-packages dbus-python
 
-pip install dbus-python
-
-# spicetify-cli
-# https://aur.archlinux.org/spicetify-cli.git
-# spicetify config current_theme $THEME_NAME
-# spicetify auto backup apply
+# Spotify fix
 sudo chmod a+wr /opt/spotify
 sudo chmod a+wr /opt/spotify/Apps -R
 
-#
-# GITHUB
-#
-
-# BeautifulDiscord
-# https://github.com/leovoel/BeautifulDiscord
-#python3 -m pip install -U https://github.com/leovoel/BeautifulDiscord/archive/master.zip
-# use: python -m beautifuldiscord --css ~/.config/discord/rices/$THEME_NAME
-
-echo "[FINISHED]: packages installation"
+echo "[FINISHED]: Combined packages installation"

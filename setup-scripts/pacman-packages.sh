@@ -1,13 +1,19 @@
-#! /bin/bash
+#!/bin/bash
 
-echo "[START]: general-packages installation..."
+echo "[START]: General packages installation..."
 
-yes | sudo pacman -Syu
-yes | sudo pacman -Sy --needed --overwrite "*" --nodeps --nodeps `cat ./setup-scripts/resources/pacman-packages` || exit 1
+# Full system upgrade
+sudo aura -Syu --noconfirm
 
-# ranger icons:
-devicons_dir=$HOME/.config/ranger/plugins/ranger_devicons
-[ -d $devicons_dir ] && rm -rf $devicons_dir
-git clone https://github.com/alexanderjeurissen/ranger_devicons $devicons_dir
+# Install official repo packages
+sudo aura -S --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/pacman-packages) || {
+  echo "[ERROR]: Failed installing pacman packages."
+  exit 1
+}
 
-echo "[FINISHED]: general-packages installation"
+# Ranger icons plugin
+devicons_dir="$HOME/.config/ranger/plugins/ranger_devicons"
+rm -rf "$devicons_dir"
+git clone https://github.com/alexanderjeurissen/ranger_devicons "$devicons_dir"
+
+echo "[FINISHED]: General packages installation"
