@@ -35,14 +35,14 @@ fi
 # Install AUR packages
 if [ -f ./setup-scripts/resources/aur-packages ]; then
   echo "[INFO]: Installing AUR packages..."
-  aura -A --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/aur-packages) || {
+  aura -A -- --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/aur-packages) || {
     echo "[ERROR]: Failed installing AUR packages."
     exit 1
   }
 fi
 
 # Extra AUR packages (if not listed)
-aura -A --needed --noconfirm wmutils-git ueberzug
+aura -A -- --needed --noconfirm wmutils-git ueberzug
 
 # Python requirement
 pip install --break-system-packages dbus-python
