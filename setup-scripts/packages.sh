@@ -2,8 +2,8 @@
 
 echo "[START]: combined packages installation..."
 
-# Import keys
-./.scripts/addkey.sh $(grep -v '#' ./setup-scripts/resources/keys)
+# Import keys (if any)
+[ -f ./setup-scripts/resources/keys ] && ./setup-scripts/addkey.sh $(grep -v '#' ./setup-scripts/resources/keys)
 
 # Output packages directory creation
 mkdir -p "$HOME/Downloads/git-downloads"
@@ -21,13 +21,28 @@ if ! command -v aura &> /dev/null; then
 fi
 
 # Update system
-sudo aura -Sy
+sudo aura -Syu
 
-# Install packages from packages.txt
-aura -A --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/packages.txt) || {
-  echo "[ERROR]: Failed installing packages from packages.txt."
-  exit 1
-}
+# Install pacman packages
+if [ -f ./setup-scripts/resources/pacman-packages ]; then
+  echo "[INFO]: Installing pacman packages..."
+  aura -S --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/pacman-packages) || {
+    echo "[ERROR]: Failed installing pacman packages."
+    exit 1
+  }
+fi
+
+# Install AUR packages
+if [ -f ./setup-scripts/resources/aur-packages ]; then
+  echo "[INFO]: Installing AUR packages..."
+  aura -A --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/aur-packages) || {
+    echo "[ERROR]: Failed installing AUR packages."
+    exit 1
+  }
+fi
+
+# Extra AUR packages (if not listed)
+aura -A --needed --noconfirm wmutils-git ueberzug
 
 # Python requirement
 pip install --break-system-packages dbus-python

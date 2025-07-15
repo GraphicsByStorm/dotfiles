@@ -20,11 +20,18 @@ if ! command -v aura &> /dev/null; then
   cd - || exit 1
 fi
 
-# Update system
+# Update AUR package database
 sudo aura -Sy
 
+# Safe, validated AUR packages
+AUR_PKGS=(
+  arc-icon-theme celt electron13 libsidplay libvisual metis neofetch nomacs
+  python-progress udevil vbam-wx wxgtk2 wxgtk3 wxgtk-common
+  zsh-theme-powerlevel10k
+)
+
 # Install AUR packages
-aura -A --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/aur-packages) || {
+aura -A --needed --noconfirm "${AUR_PKGS[@]}" || {
   echo "[ERROR]: Failed installing AUR packages."
   exit 1
 }
