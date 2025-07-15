@@ -1,61 +1,76 @@
-#! /bin/bash
+#!/bin/bash
 
 echo "[START]: theme installation..."
 
 SETUP_ROOT="$(dirname "$PWD")"
 arg=$1
 copy_icons_and_themes=$2
-echo $SETUP_ROOT
+echo "SETUP_ROOT: $SETUP_ROOT"
 
 function setup_config {
     replace_user="zodd"
-    # args
     config_name=$1
 
-    # download rice if rice config directory is empty
-    [ -z "$(ls -a ./rices/$config_name | grep -v -w '^\.')" ] && ./setup-scripts/download-rice.sh $config_name
-    
-    # backup of .xinitrc, .bashrc and .zshrc
-    cp $HOME/.xinitrc $HOME/.xinitrc-backup
-    cp $HOME/.bashrc $HOME/.bashrc-backup
-    cp $HOME/.zshrc $HOME/.zshrc-backup
+    # Download rice if the config directory is empty
+    if [ -z "$(ls -A "./rices/$config_name" 2>/dev/null | grep -v -w '^\.')" ]; then
+        ./setup-scripts/download-rice.sh "$config_name"
+    fi
 
-    nohup notify-send -i $SETUP_ROOT/dotfiles/setup-scripts/resources/white-brush.png "[INFO]: copying \"$config_name\" config files..." &
+    # Backup of existing shell config files
+    [ -f "$HOME/.xinitrc" ] && cp "$HOME/.xinitrc" "$HOME/.xinitrc-backup"
+    [ -f "$HOME/.bashrc" ] && cp "$HOME/.bashrc" "$HOME/.bashrc-backup"
+    [ -f "$HOME/.zshrc" ] && cp "$HOME/.zshrc" "$HOME/.zshrc-backup"
 
-    #
-    # copying theme dotfiles
-    #
+    nohup notify-send -i "$SETUP_ROOT/dotfiles/setup-scripts/resources/white-brush.png" \
+        "[INFO]: copying \"$config_name\" config files..." &
+
     echo
     echo "[INFO]: applying \"$config_name\" theme..."
 
-    #nohup cp -r $SETUP_ROOT/dotfiles/shared-config/. $HOME &> /dev/null
-    cp ./shared-config/.config/neofetch/config.conf $HOME/.config/neofetch
-    rm -rf $HOME/.oh-my-zsh/additional/* &> /dev/null
-    dconf load /org/gnome/gedit/ < $HOME/.config/gedit-dump.dconf
-    rm $HOME/.mozilla/firefox/mxrcz6ht.default-release-1594850756736/chrome/userChrome.css
-    rsync -ravu ./shared-config/.config/polybar/scripts/rofi-poweroff.sh ./shared-config/.config/polybar/scripts/theme-swap.sh ~/.config/polybar/scripts
-    rsync -rav --exclude "*git*" --exclude ".icons" --exclude ".themes" --exclude ".wallpapers" $SETUP_ROOT/dotfiles/rices/$config_name/. $HOME
-    rsync -ravu ./rices/$config_name/.wallpapers ./rices/$config_name/.icons ./rices/$config_name/.themes $HOME
+    # Neofetch config
+    cp ./shared-config/.config/neofetch/config.conf "$HOME/.config/neofetch" 2>/dev/null
 
-    sed -i "s/$replace_user/$USER/g" $HOME/.config/nitrogen/*.cfg
+    # Clean additional zsh plugins if exists
+    rm -rf "$HOME/.oh-my-zsh/additional/"* 2>/dev/null
 
-    # nvim plugins installation
-    nohup nvim -E -s -u "$HOME/.config/nvim/init.vim" +PlugInstall +qall &
+    # Gedit config
+    if [ -f "$HOME/.config/gedit-dump.dconf" ]; then
+        dconf load /org/gnome/gedit/ < "$HOME/.config/gedit-dump.dconf"
+    fi
 
-    rm $HOME/README.md &> /dev/null
+    # Remove old Firefox userChrome.css if present
+    firefox_profile=$(find "$HOME/.mozilla/firefox" -maxdepth 1 -type d -name "*.default-release*" | head -n 1)
+    if [ -f "$firefox_profile/chrome/userChrome.css" ]; then
+        rm "$firefox_profile/chrome/userChrome.css"
+    fi
 
-    #
-    # configuring discord theme (beautifuldiscord)
-    #
-    #nohup $SETUP_ROOT/dotfiles/setup-scripts/set-discord-theme.sh &
+    # Sync polybar scripts
+    rsync -ravu ./shared-config/.config/polybar/scripts/rofi-poweroff.sh \
+                ./shared-config/.config/polybar/scripts/theme-swap.sh \
+                "$HOME/.config/polybar/scripts" 2>/dev/null
 
-    #
-    # configuring spotify theme (spicetify)
-    #
-    #nohup $SETUP_ROOT/dotfiles/setup-scripts/set-spotify-theme.sh &
+    # Sync dotfiles (excluding icons/themes/wallpapers)
+    rsync -rav --exclude "*git*" --exclude ".icons" --exclude ".themes" --exclude ".wallpapers" \
+        "$SETUP_ROOT/dotfiles/rices/$config_name/." "$HOME"
+
+    # Copy optional resources
+    for dir in ".icons" ".themes" ".wallpapers"; do
+        [ -d "./rices/$config_name/$dir" ] && rsync -ravu "./rices/$config_name/$dir" "$HOME"
+    done
+
+    # Update Nitrogen config user path
+    nitrogen_cfg="$HOME/.config/nitrogen/bg-saved.cfg"
+    [ -f "$nitrogen_cfg" ] && sed -i "s/$replace_user/$USER/g" "$nitrogen_cfg"
+
+    # Install NVIM plugins
+    if command -v nvim &>/dev/null && [ -f "$HOME/.config/nvim/init.vim" ]; then
+        nvim -E -s -u "$HOME/.config/nvim/init.vim" +PlugInstall +qall
+    fi
+
+    # Cleanup README if copied
+    [ -f "$HOME/README.md" ] && rm "$HOME/README.md"
 
     echo "[FINISHED]: theme installation"
-
     exit 0
 }
 
@@ -73,10 +88,10 @@ case "$arg" in
     "doombox" ) setup_config "Doombox" ;; 
     "forest" ) setup_config "Forest" ;; 
     "dracula" ) setup_config "Dracula" ;; 
-    *) echo "[ERROR]: no config with name \"$arg\" found" && notify-send -i $SETUP_ROOT/dotfiles/setup-scripts/resources/white-brush.png "[ERROR]: Selected theme does not exist" & ;;
+    * ) 
+        echo "[ERROR]: no config with name \"$arg\" found"
+        notify-send -i "$SETUP_ROOT/dotfiles/setup-scripts/resources/white-brush.png" "[ERROR]: Selected theme does not exist" &
+        ;;
 esac
 
 exit 1
-
-
-

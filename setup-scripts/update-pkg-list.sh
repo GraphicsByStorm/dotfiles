@@ -1,29 +1,41 @@
 #!/bin/bash
 
-function update {
-    pacman_arg=$1
-    output_file=$2
+# Set working root
+DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 
-    EXCLUDE='(systemd|^themix|nativefier|^resvg|discord|spotify|skype|virtualbox|dropbox|etcher-bin|chromium|libsoup3|telegram|code)'
+function update() {
+    local pacman_arg=$1
+    local output_file=$2
+    local output_path="$DOTFILES/setup-scripts/resources/$output_file"
 
-    sudo pacman -$pacman_arg | grep -Ev $EXCLUDE | cut -d ' ' -f 1 > $DOTFILES/setup-scripts/resources/$output_file
+    local EXCLUDE='(systemd|^themix|nativefier|^resvg|discord|spotify|skype|virtualbox|dropbox|etcher-bin|chromium|libsoup3|telegram|code)'
+
+    echo "[INFO]: Updating package list -> $output_file"
+    sudo pacman -"$pacman_arg" | grep -Ev "$EXCLUDE" | awk '{print $1}' > "$output_path"
+
+    if [ $? -eq 0 ]; then
+        echo "[SUCCESS]: Wrote to $output_path"
+    else
+        echo "[ERROR]: Failed writing to $output_path"
+    fi
 }
 
-arg=$1
+arg="$1"
 
-if [ "$arg" = "aur" ];
-then 
-    update 'Qm' 'aur-packages'
-elif [ "$arg" = "pacman" ];
-then
-    update 'Qn' 'pacman-packages'
-elif [ "$arg" = "all" ];
-then
-    update 'Qm' 'aur-packages'
-    update 'Qn' 'pacman-packages'
-else
-    echo "No option named: \"$arg\""
-    echo "No packages list to update, exiting..."
-    exit
-fi
-
+case "$arg" in
+    aur)
+        update 'Qm' 'aur-packages'
+        ;;
+    pacman)
+        update 'Qn' 'pacman-packages'
+        ;;
+    all)
+        update 'Qm' 'aur-packages'
+        update 'Qn' 'pacman-packages'
+        ;;
+    *)
+        echo "[ERROR]: Invalid option \"$arg\""
+        echo "Usage: $0 [aur|pacman|all]"
+        exit 1
+        ;;
+esac

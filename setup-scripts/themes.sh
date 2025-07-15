@@ -2,47 +2,70 @@
 
 replace_user="zodd"
 
-echo "[INFO]: Copying themes, icons, fonts and scripts..."
-notify-send -i ./setup-scripts/resources/white-brush.png "[INFO]: Copying themes, icons, fonts and scripts..." &
+echo "[INFO]: Copying themes, icons, fonts, and scripts..."
+notify-send -i ./setup-scripts/resources/white-brush.png "[INFO]: Copying themes, icons, fonts, and scripts..." &
 
-sudo cat ./environment >> /etc/environment
+# Append to /etc/environment only if values aren't already present
+if ! grep -qF "$(cat ./environment)" /etc/environment 2>/dev/null; then
+  echo "[INFO]: Updating /etc/environment..."
+  sudo tee -a /etc/environment < ./environment >/dev/null
+fi
 
-# screenshots folder to store scrot screenshots
-[ -d $HOME/Pictures/Screenshots ] || mkdir -p $HOME/Pictures/Screenshots
+# Create screenshots directory if missing
+mkdir -p "$HOME/Pictures/Screenshots"
 
 echo "[INFO]: Copying wallpapers..."
-cp -r ./.wallpapers $HOME
+cp -r ./.wallpapers "$HOME"
+
 echo "[INFO]: Copying scripts..."
-cp -r ./.scripts $HOME
+cp -r ./.scripts "$HOME"
+
 echo "[INFO]: Copying fonts..."
-cp -r ./.fonts $HOME
+cp -r ./.fonts "$HOME"
+
 echo "[INFO]: Copying themes..."
-cp -r ./.themes $HOME
+cp -r ./.themes "$HOME"
+
 echo "[INFO]: Copying icons..."
-cp -r ./.icons $HOME
+cp -r ./.icons "$HOME"
 
-# copy global/shared config to $HOME
-cp -rv ./shared-config/. $HOME
+echo "[INFO]: Copying shared configuration files..."
+cp -rv ./shared-config/. "$HOME"
 
-# install plugins for nvim
+# Install plugins for Neovim
+echo "[INFO]: Installing Neovim plugins..."
 nvim -E -s -u "$HOME/.config/nvim/init.vim" +PlugInstall +qall
 
-# install nvim coc plugin
-cd $HOME/.config/nvim/plugged/coc.nvim && npm i && cd
+# Install coc.nvim dependencies if available
+if [ -d "$HOME/.config/nvim/plugged/coc.nvim" ]; then
+  echo "[INFO]: Installing coc.nvim..."
+  cd "$HOME/.config/nvim/plugged/coc.nvim" && npm i && cd -
+fi
 
-# devicons for ranger
-git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
+# Ranger devicons plugin
+echo "[INFO]: Installing Ranger devicons..."
+git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons 2>/dev/null
 
-sed -i "s/$replace_user/$USER/g" $HOME/.zshrc $HOME/.config/sxhkd/sxhkdrc*
+# Replace placeholder user with current user
+sed -i "s/$replace_user/$USER/g" "$HOME/.zshrc" "$HOME/.config/sxhkd/sxhkdrc"*
 
-[ -f $HOME/.scripts/custom-autostart ] || echo '#!/bin/bash' >> $HOME/.scripts/custom-autostart && chmod +x $HOME/.scripts/custom-autostart 
+# Ensure custom autostart exists
+autostart_script="$HOME/.scripts/custom-autostart"
+if [ ! -f "$autostart_script" ]; then
+  echo '#!/bin/bash' > "$autostart_script"
+  chmod +x "$autostart_script"
+fi
 
-# default wm is bspwm
-cp $HOME/.config/sxhkd/sxhkdrc.bspwm $HOME/.config/sxhkd/sxhkdrc
+# Set default sxhkd config
+cp "$HOME/.config/sxhkd/sxhkdrc.bspwm" "$HOME/.config/sxhkd/sxhkdrc"
 
-# change user default shell to zsh, will require password and reboot to apply changes
-chsh -s /usr/bin/zsh
+# Set ZSH as default shell if not already
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+  echo "[INFO]: Changing default shell to Zsh..."
+  chsh -s /usr/bin/zsh
+fi
 
-# ask user for keyboard layout
+# Ask user to set keyboard layout
 ./setup-scripts/kb-layout.sh
 
+echo "[FINISHED]: Theme, fonts, icons, and script configuration complete."
