@@ -8,21 +8,14 @@ consolas-font
 esy
 eww-git
 lemonbar
-mingetty
 ncurses5-compat-libs
 nerd-fonts-hack
-ocaml-curl
-ocaml-pcre
-ocamlfuse
-ocamlnet
 ocs-url
 otf-font-awesome-5-free
 pfetch-git
 picom-rounded-corners
 pipes.sh
 pod2man
-polybar
-python2-pathlib
 siji-git
 simple-mtpfs
 snapd
@@ -36,4 +29,3 @@ update-grub
 xtitle
 yay
 ytop
-zsh-theme-powerlevel10k-git

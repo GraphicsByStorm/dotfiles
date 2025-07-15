@@ -652,6 +652,7 @@ mdadm
 mesa
 meson
 metis
+mingetty
 mingw-w64-binutils
 mingw-w64-crt
 mingw-w64-gcc
@@ -703,22 +704,6 @@ nss
 ntfs-3g
 numactl
 obs-studio
-ocaml
-ocaml-base
-ocaml-compiler-libs
-ocaml-compiler-libs-repackaged
-ocaml-csexp
-ocaml-ctypes
-ocaml-findlib
-ocaml-integers
-ocaml-ppx_derivers
-ocaml-result
-ocaml-sexplib0
-ocaml-stdio
-ocaml-stdlib-shims
-ocaml-topkg
-ocaml-zarith
-ocamlbuild
 ocl-icd
 oniguruma
 openal
@@ -766,6 +751,7 @@ pixman
 pkgconf
 playerctl
 polkit
+polybar
 poppler
 poppler-data
 poppler-glib
@@ -805,6 +791,7 @@ python-markdown
 python-more-itertools
 python-msgpack
 python-ordered-set
+python-pathlib
 python-packaging
 python-pep517
 python-pillow
@@ -971,6 +958,7 @@ ueberzug
 unibilium
 unp
 unrar
+update-grub
 unzip
 upower
 usbmuxd
@@ -1078,3 +1066,4 @@ zsh-autosuggestions
 zstd
 zvbi
 zxing-cpp
+zsh-theme-powerlevel10k
