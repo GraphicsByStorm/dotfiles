@@ -40,7 +40,7 @@ PKGS=(
   htop neovim unzip p7zip lsof tree man-db man-pages tldr smartmontools
   parted gnome-system-monitor gnome-control-center polkit
 
-  pipewire pipewire-pulse pulseaudio pavucontrol
+  pipewire pipewire-pulse pavucontrol
 
   ttf-dejavu ttf-liberation noto-fonts noto-fonts-emoji cantarell-fonts
   hicolor-icon-theme adwaita-icon-theme gnome-themes-extra
