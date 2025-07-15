@@ -5,26 +5,25 @@ echo "[START]: AUR/external packages installation..."
 # Import keys
 ./.scripts/addkey.sh $(grep -v '#' ./setup-scripts/resources/keys)
 
-# Ensure base-devel and git are present (required for AUR building)
-sudo pacman -S --needed base-devel git --noconfirm
-
-# Install aura-bin manually if aura is not installed
-if ! command -v aura &> /dev/null; then
-  echo "[INFO]: Aura not found. Bootstrapping aura-bin from AUR..."
-  git clone https://aur.archlinux.org/aura-bin.git /tmp/aura-bin
-  cd /tmp/aura-bin
-  makepkg -si --noconfirm
-  cd -
-  rm -rf /tmp/aura-bin
-fi
-
-# Create output packages directory
+# Output packages directory creation
 mkdir -p "$HOME/Downloads/git-downloads"
 
-# Sync packages
+# Check if Aura is installed
+if ! command -v aura &> /dev/null; then
+  echo "[INFO]: Aura not found. Installing aura-bin from AUR..."
+  git clone https://aur.archlinux.org/aura-bin.git "$HOME/Downloads/git-downloads/aura-bin"
+  cd "$HOME/Downloads/git-downloads/aura-bin" || exit 1
+  makepkg -si --noconfirm || {
+    echo "[ERROR]: Failed to install aura-bin"
+    exit 1
+  }
+  cd - || exit 1
+fi
+
+# Update system
 sudo aura -Sy
 
-# Install AUR packages from list
+# Install AUR packages
 aura -A --needed --noconfirm $(grep -v '#' ./setup-scripts/resources/aur-packages) || {
   echo "[ERROR]: Failed installing AUR packages."
   exit 1
