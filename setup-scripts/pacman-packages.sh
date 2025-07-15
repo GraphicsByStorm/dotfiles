@@ -45,7 +45,7 @@ PKGS=(
   ttf-dejavu ttf-liberation noto-fonts noto-fonts-emoji cantarell-fonts
   hicolor-icon-theme adwaita-icon-theme gnome-themes-extra
 
-  lxappearance nitrogen dmenu rofi feh neofetch screenfetch scrot
+  lxappearance nitrogen dmenu rofi feh screenfetch scrot
 )
 
 # Install packages using aura
