@@ -10,14 +10,12 @@ alsa-plugins
 alsa-topology-conf
 alsa-ucm-conf
 alsa-utils
-amtk
 aom
 apache
 apparmor
 appstream
 apr
 apr-util
-arc-icon-theme
 archlinux-keyring
 argon2
 asciiquarium
@@ -63,7 +61,6 @@ catimg
 cblas
 cdparanoia
 cdrtools
-celt
 cfitsio
 check
 cheese
@@ -117,7 +114,6 @@ e2fsprogs
 edk2-ovmf
 efibootmgr
 efivar
-electron13
 elfutils
 enchant
 epiphany
@@ -169,7 +165,6 @@ gegl
 gendesk
 geoclue
 gettext
-gfbgraph
 ghostscript
 giflib
 gimp
@@ -263,7 +258,6 @@ hidapi
 highlight
 htop
 hunspell
-hwids
 hwloc
 hyphen
 i3-gaps
@@ -286,9 +280,9 @@ jasper
 java-environment-common
 java-hamcrest
 java-runtime-common
-java11-openjfx
-java11-openjfx-doc
-java11-openjfx-src
+java-openjfx
+java-openjfx-doc
+java-openjfx-src
 jbig2dec
 jdk11-openjdk
 jemalloc
@@ -297,7 +291,6 @@ jre-openjdk
 jre-openjdk-headless
 jre11-openjdk
 jre11-openjdk-headless
-js78
 json-c
 json-glib
 jsoncpp
@@ -351,7 +344,6 @@ libchamplain
 libcloudproviders
 libcolord
 libconfig
-libcroco
 libcue
 libcups
 libcurl-gnutls
@@ -400,7 +392,7 @@ libgssglue
 libgtop
 libgudev
 libgusb
-libgweather
+libgweather-4
 libgxps
 libhandy
 libheif
@@ -496,7 +488,6 @@ libsass
 libseccomp
 libsecret
 libshout
-libsidplay
 libsigc++
 libsigsegv
 libslirp
@@ -540,7 +531,6 @@ libvips
 libvirt
 libvirt-glib
 libvisio
-libvisual
 libvncserver
 libvorbis
 libvpx
@@ -618,8 +608,7 @@ md4c
 mdadm
 mesa
 meson
-metis
-mingetty
+agetty
 mingw-w64-binutils
 mingw-w64-crt
 mingw-w64-gcc
@@ -645,7 +634,6 @@ nasm
 nautilus
 ncurses
 ndctl
-neofetch
 neon
 neovim
 net-snmp
@@ -661,7 +649,6 @@ nm-connection-editor
 node-gyp
 nodejs
 nodejs-nopt
-nomacs
 noto-fonts
 noto-fonts-emoji
 npm
@@ -744,7 +731,6 @@ python-cffi
 python-chardet
 python-click
 python-colorama
-python-contextlib2
 python-cryptography
 python-distlib
 python-distro
@@ -758,13 +744,10 @@ python-markdown
 python-more-itertools
 python-msgpack
 python-ordered-set
-python-pathlib
 python-packaging
-python-pep517
 python-pillow
 python-pip
 python-ply
-python-progress
 python-pycparser
 python-pyopenssl
 python-pyparsing
@@ -785,8 +768,6 @@ python-xcffib
 python-xlib
 python-yaml
 python-zope-interface
-python2
-python2-numpy
 qbittorrent
 qemu
 qt5-base
@@ -885,7 +866,6 @@ svt-hevc
 sxhkd
 sxiv
 sysfsutils
-t1lib
 taglib
 talloc
 tar
@@ -893,7 +873,6 @@ tbb
 tcl
 tdb
 telepathy-glib
-tepl
 terminus-font
 tevent
 texinfo
@@ -901,8 +880,6 @@ thin-provisioning-tools
 tldr
 tmate
 totem-pl-parser
-tracker
-tracker-miners
 tracker3
 tracker3-miners
 translate-shell
@@ -919,7 +896,6 @@ twolame
 typescript
 tzdata
 uchardet
-udevil
 udisks2
 ueberzug
 unibilium
@@ -934,13 +910,11 @@ util-linux
 util-linux-libs
 v4l-utils
 vamp-plugin-sdk
-vbam-wx
 vde2
 vi
 vid.stab
 vim
 vim-runtime
-vino
 virglrenderer
 vlc
 vmaf
@@ -962,9 +936,6 @@ wmname
 woff2
 wpa_supplicant
 wpebackend-fdo
-wxgtk-common
-wxgtk2
-wxgtk3
 x264
 x265
 xbitmaps
@@ -1032,4 +1003,3 @@ zsh-autosuggestions
 zstd
 zvbi
 zxing-cpp
-zsh-theme-powerlevel10k
